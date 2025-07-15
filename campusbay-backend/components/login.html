@@ -44,31 +44,32 @@
   <script>
     // Handle login form submission
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = e.target.email.value;
-      const password = e.target.password.value;
+    e.preventDefault();
+    const email = e.target.email.value;     // ✅ was emailOrUsername earlier
+    const password = e.target.password.value;
 
-      try {
+    try {
         const res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
         });
 
         const data = await res.json();
 
         if (res.ok) {
-          localStorage.setItem("token", data.token);
-          localStorage.removeItem("guest"); // clear guest flag
-          window.location.href = "home.html";
+        localStorage.setItem("token", data.token);
+        localStorage.removeItem("guest");
+        window.location.href = "home.html";
         } else {
-          alert(data.error || "Login failed");
+        alert(data.error || "Login failed");
         }
-      } catch (err) {
+    } catch (err) {
         alert("Something went wrong.");
         console.error(err);
-      }
+    }
     });
+
 
     function guestLogin() {
       localStorage.setItem("guest", "true");
