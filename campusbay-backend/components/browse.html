@@ -193,8 +193,23 @@
       if (maxPrice) url += `&maxPrice=${maxPrice}`;
       if (location) url += `&location=${encodeURIComponent(location)}`;
 
+      const token = localStorage.getItem("token");
+      const isGuest = localStorage.getItem("guest") === "true";
+
+      const headers = {
+        "Content-Type": "application/json"
+      };
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else if (isGuest) {
+        headers["x-guest"] = "true";
+      }
+
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, {
+          headers: headers
+        });
+
         const data = await res.json();
 
         const container = document.getElementById("listingsContainer");
@@ -239,5 +254,6 @@
 
     window.onload = fetchListings;
   </script>
+
 </body>
 </html>

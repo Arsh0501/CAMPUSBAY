@@ -59,7 +59,7 @@
 
         if (res.ok) {
           localStorage.setItem("token", data.token);
-          localStorage.removeItem("guest"); // clear guest flag if previously set
+          localStorage.removeItem("guest"); // clear guest flag
           window.location.href = "home.html";
         } else {
           alert(data.error || "Login failed");
@@ -72,7 +72,7 @@
 
     function guestLogin() {
       localStorage.setItem("guest", "true");
-      localStorage.removeItem("token"); // clear token if previously logged in
+      localStorage.removeItem("token");
       window.location.href = "home.html";
     }
   </script>
