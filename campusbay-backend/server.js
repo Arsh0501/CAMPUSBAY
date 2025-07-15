@@ -17,6 +17,21 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// ✅ Extract userId from JWT (for controllers to use)
+app.use((req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    try {
+      const token = authHeader.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.userId = decoded.id;
+    } catch (err) {
+      req.userId = null;
+    }
+  }
+  next();
+});
+
 // ✅ Middleware: Restrict access based on token or guest flag
 app.use((req, res, next) => {
   const publicPaths = [
@@ -86,3 +101,4 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
   });
+  

@@ -14,9 +14,8 @@ exports.createListing = async (req, res) => {
 // Get all listings or filter by userId
 exports.getAllListings = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const listings = userId
-      ? await Listing.find({ userId }).sort({ createdAt: -1 })
+    const listings = req.userId
+      ? await Listing.find({ userId: req.userId }).sort({ createdAt: -1 })
       : await Listing.find().sort({ createdAt: -1 });
 
     res.json(listings);
@@ -64,8 +63,13 @@ exports.updateStatus = async (req, res) => {
 // Enhanced Search with filters, sort, and pagination
 exports.createListingWithImage = async (req, res) => {
   try {
-    const { title, description, price, condition, category, location, userId, sellerName } = req.body;
+    if (!req.userId) return res.status(401).json({ error: "Unauthorized" });
+
+    const { title, description, price, condition, category, location } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
+
+    const user = await User.findById(req.userId).lean();
+    const sellerName = user?.name || "Anonymous";
 
     const newListing = new Listing({
       title,
@@ -74,15 +78,15 @@ exports.createListingWithImage = async (req, res) => {
       condition,
       category,
       location,
-      userId,
-      sellerName,
       imageUrl,
+      userId: req.userId,
+      sellerName,
     });
 
     await newListing.save();
     res.status(201).json(newListing);
   } catch (err) {
-    console.error("❌ Error creating listing with image:", err);
+    console.error("❌ Error creating listing:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
