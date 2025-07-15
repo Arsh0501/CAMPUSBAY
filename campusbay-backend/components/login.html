@@ -1,38 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>CAMPUSBAY - Log In</title>
-    <link rel="stylesheet" href="inup.css">
+  <meta charset="UTF-8">
+  <title>CAMPUSBAY - Log In</title>
+  <link rel="stylesheet" href="inup.css">
 </head>
 <body>
-    <div class="center-container">
-        <div class="login-card">
-            <div class="logo-title">
-                <span class="logo-icon">🎓</span>
-                <span class="logo-text"><a href="home.html">CAMPUSBAY</a></span>
-            </div>
-            <p class="welcome-msg">Welcome back to your learning journey</p>
-            <h2 class="form-title">Log In</h2>
-            <form>
-                <label>Email or Username</label>
-                <input type="text" placeholder="Enter your email or username" required>
-                <label>Password</label>
-                <input type="password" placeholder="Enter your password" required>
-                <div class="form-row">
-                    <label><input type="checkbox"> Remember me</label>
-                    <a href="#" class="forgot-link">Forgot Password?</a>
-                </div>
-                <button type="submit" class="main-btn">Log In</button>
-            </form>
-            <div class="divider">or</div>
-            <button class="google-btn">G &nbsp; Continue with Google</button>
-            <button class="microsoft-btn">▦ &nbsp; Continue with Microsoft</button>
-            <div class="signup-link">
-                Don't have an account?
-                <a href="signup.html">Sign Up</a>
-            </div>
+  <div class="center-container">
+    <div class="login-card">
+      <div class="logo-title">
+        <span class="logo-icon">🎓</span>
+        <span class="logo-text"><a href="home.html">CAMPUSBAY</a></span>
+      </div>
+      <p class="welcome-msg">Welcome back to your learning journey</p>
+      <h2 class="form-title">Log In</h2>
+
+      <form id="loginForm">
+        <label>Email or Username</label>
+        <input type="text" id="email" placeholder="Enter your email or username" required>
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required>
+
+        <div class="form-row">
+          <label><input type="checkbox"> Remember me</label>
+          <a href="#" class="forgot-link">Forgot Password?</a>
         </div>
+
+        <button type="submit" class="main-btn">Log In</button>
+      </form>
+
+      <div id="errorMsg" style="color: red; margin-top: 10px;"></div>
+
+      <div class="divider">or</div>
+      <button class="google-btn">G &nbsp; Continue with Google</button>
+      <button class="microsoft-btn">▦ &nbsp; Continue with Microsoft</button>
+
+      <div class="signup-link">
+        Don't have an account?
+        <a href="signup.html">Sign Up</a>
+      </div>
     </div>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.token) {
+          localStorage.setItem("token", data.token);
+          window.location.href = "home.html"; // Redirect to home or protected page
+        } else {
+          errorMsg.textContent = data.message || "Invalid login credentials.";
+        }
+      } catch (err) {
+        errorMsg.textContent = "Login failed. Please try again later.";
+        console.error("Login error:", err);
+      }
+    });
+  </script>
 </body>
 </html>
