@@ -36,7 +36,7 @@ const authenticate = (req, res, next) => {
 router.post("/create", authenticate, upload.single("image"), listingController.createListingWithImage);
 
 // Get all listings (My Listings page)
-router.get("/", listingController.getAllListings);
+router.get("/", authenticate, listingController.getAllListings);
 
 // Search listings (Browse + Home)
 router.get("/search", listingController.searchListings);
