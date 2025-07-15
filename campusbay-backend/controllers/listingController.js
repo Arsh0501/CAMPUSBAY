@@ -86,6 +86,7 @@ exports.createListingWithImage = async (req, res) => {
     });
 
     await newListing.save();
+    console.log("✅ Listing saved:", newListing); // Add this line
     res.status(201).json(newListing);
   } catch (err) {
     console.error("❌ Error creating listing:", err.message);
