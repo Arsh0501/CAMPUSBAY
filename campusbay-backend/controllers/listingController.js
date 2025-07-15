@@ -63,18 +63,14 @@ exports.updateStatus = async (req, res) => {
 // Enhanced Search with filters, sort, and pagination
 exports.createListingWithImage = async (req, res) => {
   try {
-    console.log("🛠️ Incoming listing:");
-    console.log("req.body:", req.body);
-    console.log("req.file:", req.file);
-    console.log("req.user:", req.user);
-
     const { title, description, price, condition, category, location } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
-    const userId = req.user?.id;
+
+    const userId = req.user?.id || req.userId;
+    const sellerName = req.user?.username || "Unknown Seller";
 
     if (!userId) {
-      console.error("❌ No user ID in token.");
-      return res.status(401).json({ error: "Unauthorized" });
+      return res.status(401).json({ error: "Unauthorized: Missing user ID" });
     }
 
     const newListing = new Listing({
@@ -86,19 +82,16 @@ exports.createListingWithImage = async (req, res) => {
       location,
       imageUrl,
       userId,
-      sellerName: req.user.username, // 👈 Only if you're encoding `username` in JWT
+      sellerName,
     });
 
     await newListing.save();
     res.status(201).json(newListing);
   } catch (err) {
-    console.error("❌ Error creating listing:", err);
+    console.error("❌ Error creating listing:", err.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-
-
 
 // Enhanced Search with filters, sort, and pagination
 exports.searchListings = async (req, res) => {
