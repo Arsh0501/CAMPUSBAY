@@ -1,83 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>STOLX - Sign Up</title>
-    <link rel="stylesheet" href="inup.css">
+  <meta charset="UTF-8" />
+  <title>CAMPUSBAY - Sign Up</title>
+  <link rel="stylesheet" href="inup.css" />
 </head>
 <body>
-    <header class="signup-header">
-        <span class="header-logo"><a href="home.html">CAMPUSBAY</a></span></span>
-        <nav>
-            <a href="home.html">Home</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-            <a href="login.html" class="header-login-btn">Log In</a>
-        </nav>
-    </header>
-    <div class="center-container">
-        <div class="signup-card">
-            <div class="logo-title">
-                <span class="logo-icon">🎓</span>
-                <span class="logo-text">STOLX</span>
-            </div>
-            <h2 class="form-title">Create Your Account</h2>
-            <p class="subtitle">Join thousands of students managing their finances</p>
-            <form>
-                <label>Full Name</label>
-                <input type="text" placeholder="Enter your full name" required>
-                <label>Email Address</label>
-                <input type="email" placeholder="Enter your email" required>
-                <label>University/College Name</label>
-                <input type="text" placeholder="Enter your university or college" required>
-                <label>Password</label>
-                <input type="password" placeholder="Create a password" required>
-                <label>Confirm Password</label>
-                <input type="password" placeholder="Confirm your password" required>
-                <label class="terms">
-                    <input type="checkbox" required>
-                    I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-                </label>
-                <button type="submit" class="main-btn">Create Account</button>
-            </form>
-            <div class="signup-link">
-                Already have an account? <a href="login.html">Log In</a>
-            </div>
-            <div class="divider">Or continue with</div>
-            <div class="social-buttons">
-                <button class="google-btn">G</button>
-                <button class="apple-btn"></button>
-            </div>
-        </div>
+  <header class="signup-header">
+    <span class="header-logo"><a href="home.html">CAMPUSBAY</a></span>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="login.html" class="header-login-btn">Log In</a>
+    </nav>
+  </header>
+
+  <div class="center-container">
+    <div class="signup-card">
+      <div class="logo-title">
+        <span class="logo-icon">🎓</span>
+        <span class="logo-text">CAMPUSBAY</span>
+      </div>
+      <h2 class="form-title">Create Your Account</h2>
+      <p class="subtitle">Join thousands of students managing their campus essentials</p>
+
+      <form id="signupForm">
+        <label>Full Name</label>
+        <input type="text" name="fullName" placeholder="Enter your full name" required />
+
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="Enter your email" required />
+
+        <label>University/College Name</label>
+        <input type="text" name="college" placeholder="Enter your university or college" required />
+
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Create a password" required />
+
+        <label>Confirm Password</label>
+        <input type="password" name="confirmPassword" placeholder="Confirm your password" required />
+
+        <label class="terms">
+          <input type="checkbox" required />
+          I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </label>
+
+        <button type="submit" class="main-btn">Create Account</button>
+      </form>
+
+      <div class="signup-link">
+        Already have an account? <a href="login.html">Log In</a>
+      </div>
+
+      <div class="divider">Or continue with</div>
+      <div class="social-buttons">
+        <button class="google-btn" onclick="alert('Google sign up not implemented')">G</button>
+        <button class="apple-btn" onclick="alert('Apple sign up not implemented')"></button>
+      </div>
     </div>
-    <footer>
-        <div class="footer-content">
-            <div>
-                <b>STOLX</b><br>
-                Empowering students to take control of their financial future.
-            </div>
-            <div>
-                <b>Product</b><br>
-                Features<br>
-                Pricing<br>
-                Security
-            </div>
-            <div>
-                <b>Support</b><br>
-                Help Center<br>
-                Contact Us<br>
-                Privacy Policy
-            </div>
-            <div>
-                <b>Connect</b><br>
-                Twitter<br>
-                Instagram<br>
-                LinkedIn
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2025 CAMPUSBAY. All rights reserved.
-        </div>
-    </footer>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div>
+        <b>CAMPUSBAY</b><br />
+        Empowering students to buy, sell, and barter smarter.
+      </div>
+      <div>
+        <b>Product</b><br />
+        Features<br />
+        Pricing<br />
+        Security
+      </div>
+      <div>
+        <b>Support</b><br />
+        Help Center<br />
+        Contact Us<br />
+        Privacy Policy
+      </div>
+      <div>
+        <b>Connect</b><br />
+        Twitter<br />
+        Instagram<br />
+        LinkedIn
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 CAMPUSBAY. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fullName = e.target.fullName.value;
+      const email = e.target.email.value;
+      const college = e.target.college.value;
+      const password = e.target.password.value;
+      const confirmPassword = e.target.confirmPassword.value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: fullName,
+            email,
+            college,
+            password
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          alert("Signup successful. Please log in.");
+          window.location.href = "login.html";
+        } else {
+          alert(data.message || "Signup failed.");
+        }
+      } catch (err) {
+        alert("Something went wrong.");
+        console.error(err);
+      }
+    });
+  </script>
 </body>
 </html>

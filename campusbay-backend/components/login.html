@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>CAMPUSBAY - Log In</title>
-  <link rel="stylesheet" href="inup.css">
+  <link rel="stylesheet" href="inup.css" />
 </head>
 <body>
   <div class="center-container">
@@ -17,23 +17,26 @@
 
       <form id="loginForm">
         <label>Email or Username</label>
-        <input type="text" id="email" placeholder="Enter your email or username" required>
+        <input type="text" name="emailOrUsername" placeholder="Enter your email or username" required />
         <label>Password</label>
-        <input type="password" id="password" placeholder="Enter your password" required>
-
+        <input type="password" name="password" placeholder="Enter your password" required />
         <div class="form-row">
-          <label><input type="checkbox"> Remember me</label>
+          <label><input type="checkbox" /> Remember me</label>
           <a href="#" class="forgot-link">Forgot Password?</a>
         </div>
-
         <button type="submit" class="main-btn">Log In</button>
       </form>
 
-      <div id="errorMsg" style="color: red; margin-top: 10px;"></div>
-
       <div class="divider">or</div>
-      <button class="google-btn">G &nbsp; Continue with Google</button>
-      <button class="microsoft-btn">▦ &nbsp; Continue with Microsoft</button>
+
+      <!-- Google Login (placeholder) -->
+      <button class="google-btn" onclick="alert('Google login not implemented')">G &nbsp; Continue with Google</button>
+
+      <!-- Microsoft Login (placeholder) -->
+      <button class="microsoft-btn" onclick="alert('Microsoft login not implemented')">▦ &nbsp; Continue with Microsoft</button>
+
+      <!-- Guest Login -->
+      <button class="guest-btn" onclick="guestLogin()">👤 &nbsp; Continue as Guest</button>
 
       <div class="signup-link">
         Don't have an account?
@@ -43,33 +46,38 @@
   </div>
 
   <script>
-    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    // Handle Login Form Submission
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const errorMsg = document.getElementById("errorMsg");
+      const emailOrUsername = e.target.emailOrUsername.value;
+      const password = e.target.password.value;
 
       try {
-        const response = await fetch("/api/auth/login", {
+        const res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ emailOrUsername, password }),
         });
 
-        const data = await response.json();
+        const data = await res.json();
 
-        if (response.ok && data.token) {
-          localStorage.setItem("token", data.token);
-          window.location.href = "home.html"; // Redirect to home or protected page
+        if (res.ok) {
+          localStorage.setItem("token", data.token); // store JWT
+          window.location.href = "home.html";
         } else {
-          errorMsg.textContent = data.message || "Invalid login credentials.";
+          alert(data.message || "Login failed");
         }
       } catch (err) {
-        errorMsg.textContent = "Login failed. Please try again later.";
-        console.error("Login error:", err);
+        alert("Something went wrong");
+        console.error(err);
       }
     });
+
+    // Guest Login
+    function guestLogin() {
+      localStorage.setItem("guest", "true");
+      window.location.href = "home.html";
+    }
   </script>
 </body>
 </html>
