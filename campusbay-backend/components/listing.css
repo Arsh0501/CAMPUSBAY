@@ -275,3 +275,30 @@ footer {
     color: #888;
     font-size: 0.99rem;
 }
+
+.listing-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.listing-form textarea {
+  grid-column: span 2;
+  resize: vertical;
+}
+
+.listing-form button {
+  grid-column: span 2;
+  padding: 10px;
+  background: #2a2a2a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}

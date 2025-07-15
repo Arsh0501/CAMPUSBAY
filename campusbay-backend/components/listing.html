@@ -47,22 +47,32 @@
 
       <section id="listingFormSection">
         <h3>Post a New Listing</h3>
-        <form id="listingForm" enctype="multipart/form-data">
-          <input type="text" name="title" placeholder="Product Name" required />
-          <input type="number" name="price" placeholder="Price" required />
-          <textarea name="description" placeholder="Description" required></textarea>
-          <input type="file" name="image" accept="image/*" required />
-          <input type="text" name="category" placeholder="Category" required />
-          <input type="text" name="location" placeholder="Location" required />
-          <select name="condition" required>
-            <option value="">Select Condition</option>
-            <option value="New">New</option>
-            <option value="Like New">Like New</option>
-            <option value="Good">Good</option>
-            <option value="Fair">Fair</option>
-          </select>
-          <button type="submit">Submit Listing</button>
-        </form>
+          <form id="listingForm" enctype="multipart/form-data" class="listing-form">
+            <input type="text" name="title" placeholder="Product Name" required />
+            <input type="number" name="price" placeholder="Price (INR)" required />
+            <textarea name="description" placeholder="Product Description" rows="3" required></textarea>
+            <input type="text" name="location" placeholder="Location (e.g., R Block)" />
+            
+            <select name="condition" required>
+              <option value="">Select Condition</option>
+              <option value="New">New</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+            </select>
+
+            <select name="category" required>
+              <option value="">Select Category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Books">Books</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Others">Others</option>
+            </select>
+
+            <input type="file" name="image" accept="image/*" required />
+
+            <button type="submit">Submit Listing</button>
+          </form>
       </section>
     </div>
   </main>

@@ -5,6 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const Listing = require("../models/listing");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 // ✅ Multer storage config
 const storage = multer.diskStorage({
@@ -13,10 +14,24 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ✅ API ROUTES
+// ✅ JWT auth middleware
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Token missing" });
 
-// Create a new listing with optional image
-router.post("/create", upload.single("image"), listingController.createListingWithImage);
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // Attach user info to request
+    next();
+  } catch (err) {
+    return res.status(403).json({ error: "Invalid token" });
+  }
+};
+
+// ✅ Routes
+
+// Create a new listing with optional image (secured)
+router.post("/create", authenticate, upload.single("image"), listingController.createListingWithImage);
 
 // Get all listings (My Listings page)
 router.get("/", listingController.getAllListings);
