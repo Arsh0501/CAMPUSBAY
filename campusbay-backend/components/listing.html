@@ -47,32 +47,31 @@
 
       <section id="listingFormSection">
         <h3>Post a New Listing</h3>
-          <form id="listingForm" enctype="multipart/form-data" class="listing-form">
-            <input type="text" name="title" placeholder="Product Name" required />
-            <input type="number" name="price" placeholder="Price (INR)" required />
-            <textarea name="description" placeholder="Product Description" rows="3" required></textarea>
-            <input type="text" name="location" placeholder="Location (e.g., R Block)" />
-            
-            <select name="condition" required>
-              <option value="">Select Condition</option>
-              <option value="New">New</option>
-              <option value="Excellent">Excellent</option>
-              <option value="Good">Good</option>
-              <option value="Fair">Fair</option>
-            </select>
+        <form id="listingForm" enctype="multipart/form-data" class="listing-form">
+          <input type="text" name="title" placeholder="Product Name" required />
+          <input type="number" name="price" placeholder="Price (INR)" required />
+          <textarea name="description" placeholder="Product Description" rows="3" required></textarea>
+          <input type="text" name="location" placeholder="Location (e.g., R Block)" required />
 
-            <select name="category" required>
-              <option value="">Select Category</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Books">Books</option>
-              <option value="Furniture">Furniture</option>
-              <option value="Others">Others</option>
-            </select>
+          <select name="condition" required>
+            <option value="">Select Condition</option>
+            <option value="New">New</option>
+            <option value="Excellent">Excellent</option>
+            <option value="Good">Good</option>
+            <option value="Fair">Fair</option>
+          </select>
 
-            <input type="file" name="image" accept="image/*" required />
+          <select name="category" required>
+            <option value="">Select Category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Books">Books</option>
+            <option value="Furniture">Furniture</option>
+            <option value="Others">Others</option>
+          </select>
 
-            <button type="submit">Submit Listing</button>
-          </form>
+          <input type="file" name="image" accept="image/*" required />
+          <button type="submit">Submit Listing</button>
+        </form>
       </section>
     </div>
   </main>
@@ -108,7 +107,7 @@
               <span class="listing-status active">Active</span>
             </div>
             <div class="listing-title">${listing.description}</div>
-            <div class="listing-price">$${listing.price}</div>
+            <div class="listing-price">₹${listing.price}</div>
             <div class="listing-meta">Condition: ${listing.condition}</div>
             <div class="listing-meta">Posted: ${new Date(listing.createdAt).toLocaleDateString()}</div>
             <div class="listing-actions">
@@ -118,6 +117,7 @@
         });
       } catch (err) {
         console.error("Failed to fetch listings:", err);
+        alert("Could not load listings.");
       }
     }
 
@@ -129,13 +129,19 @@
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
-          alert("Deleted successfully");
+          alert("Deleted successfully!");
           fetchMyListings();
         } else {
-          alert("Error deleting");
+          let errorText = "Failed to delete";
+          try {
+            const errorData = await res.json();
+            errorText = errorData.error || errorText;
+          } catch (_) {}
+          alert(errorText);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Error deleting listing:", err);
+        alert("Delete failed.");
       }
     }
 
@@ -157,6 +163,7 @@
         }
       } catch (err) {
         alert("Server error");
+        console.error(err);
       }
     });
 

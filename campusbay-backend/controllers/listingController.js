@@ -63,13 +63,19 @@ exports.updateStatus = async (req, res) => {
 // Enhanced Search with filters, sort, and pagination
 exports.createListingWithImage = async (req, res) => {
   try {
-    console.log("🛠️ Incoming listing:", req.body, req.file);
+    console.log("🛠️ Incoming listing:");
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+    console.log("req.user:", req.user);
 
-    const { title, description, price, condition, category, location, sellerName } = req.body;
+    const { title, description, price, condition, category, location } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
-    const userId = req.user?.id; // Requires JWT middleware to attach `req.user`
+    const userId = req.user?.id;
 
-    if (!userId) return res.status(401).json({ error: "Unauthorized" });
+    if (!userId) {
+      console.error("❌ No user ID in token.");
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const newListing = new Listing({
       title,
@@ -78,18 +84,19 @@ exports.createListingWithImage = async (req, res) => {
       condition,
       category,
       location,
-      userId,
-      sellerName,
       imageUrl,
+      userId,
+      sellerName: req.user.username, // 👈 Only if you're encoding `username` in JWT
     });
 
     await newListing.save();
     res.status(201).json(newListing);
   } catch (err) {
-    console.error("❌ Error creating listing with image:", err);
+    console.error("❌ Error creating listing:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 
 
