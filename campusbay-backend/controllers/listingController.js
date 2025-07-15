@@ -63,6 +63,9 @@ exports.updateStatus = async (req, res) => {
 // Enhanced Search with filters, sort, and pagination
 exports.createListingWithImage = async (req, res) => {
   try {
+    console.log("🧾 Request body:", req.body);
+    console.log("🖼️ Uploaded file:", req.file);
+
     const { title, description, price, condition, category, location } = req.body;
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : "";
 
@@ -86,13 +89,15 @@ exports.createListingWithImage = async (req, res) => {
     });
 
     await newListing.save();
-    console.log("✅ Listing saved:", newListing); // Add this line
+    console.log("✅ Listing saved:", newListing);
     res.status(201).json(newListing);
   } catch (err) {
     console.error("❌ Error creating listing:", err.message);
+    console.error("🔥 Full error:", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Enhanced Search with filters, sort, and pagination
 exports.searchListings = async (req, res) => {
