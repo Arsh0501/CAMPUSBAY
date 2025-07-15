@@ -10,14 +10,14 @@
     <div class="login-card">
       <div class="logo-title">
         <span class="logo-icon">🎓</span>
-        <span class="logo-text"><a href="home.html">CAMPUSBAY</a></span>
+        <span class="logo-text"><a href="#">CAMPUSBAY</a></span>
       </div>
       <p class="welcome-msg">Welcome back to your learning journey</p>
       <h2 class="form-title">Log In</h2>
 
       <form id="loginForm">
         <label>Email or Username</label>
-        <input type="text" name="emailOrUsername" placeholder="Enter your email or username" required />
+        <input type="text" name="email" placeholder="Enter your email or username" required />
         <label>Password</label>
         <input type="password" name="password" placeholder="Enter your password" required />
         <div class="form-row">
@@ -29,53 +29,50 @@
 
       <div class="divider">or</div>
 
-      <!-- Google Login (placeholder) -->
       <button class="google-btn" onclick="alert('Google login not implemented')">G &nbsp; Continue with Google</button>
-
-      <!-- Microsoft Login (placeholder) -->
       <button class="microsoft-btn" onclick="alert('Microsoft login not implemented')">▦ &nbsp; Continue with Microsoft</button>
 
       <!-- Guest Login -->
-      <button class="guest-btn" onclick="guestLogin()">👤 &nbsp; Continue as Guest</button>
+      <button type="button" class="guest-btn" onclick="guestLogin()">Continue as Guest</button>
 
       <div class="signup-link">
-        Don't have an account?
-        <a href="signup.html">Sign Up</a>
+        Don't have an account? <a href="signup.html">Sign Up</a>
       </div>
     </div>
   </div>
 
   <script>
-    // Handle Login Form Submission
+    // Handle login form submission
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const emailOrUsername = e.target.emailOrUsername.value;
+      const email = e.target.email.value;
       const password = e.target.password.value;
 
       try {
         const res = await fetch("/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ emailOrUsername, password }),
+          body: JSON.stringify({ email, password })
         });
 
         const data = await res.json();
 
         if (res.ok) {
-          localStorage.setItem("token", data.token); // store JWT
+          localStorage.setItem("token", data.token);
+          localStorage.removeItem("guest"); // clear guest flag if previously set
           window.location.href = "home.html";
         } else {
-          alert(data.message || "Login failed");
+          alert(data.error || "Login failed");
         }
       } catch (err) {
-        alert("Something went wrong");
+        alert("Something went wrong.");
         console.error(err);
       }
     });
 
-    // Guest Login
     function guestLogin() {
       localStorage.setItem("guest", "true");
+      localStorage.removeItem("token"); // clear token if previously logged in
       window.location.href = "home.html";
     }
   </script>
