@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Details - CAMPUSBAY</title>
+  <link rel="stylesheet" href="product.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo"><a href="home.html">CAMPUSBAY</a></div>
+    </nav>
+  </header>
+
+  <main class="product-container">
+    <div class="product-card">
+      <img id="productImage" src="" alt="Product Image" class="product-image" />
+      <div class="product-info">
+        <h1 id="productTitle">Product Title</h1>
+        <p id="productPrice">₹0</p>
+        <p id="productCondition">Condition: </p>
+        <p id="productLocation">📍 Location: </p>
+        <p id="productDescription">Product Description...</p>
+        <p id="productSeller">👤 Seller: </p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const listingId = params.get("id");
+
+    async function loadProduct() {
+      try {
+        const res = await fetch(`/api/listings/${listingId}`);
+        const product = await res.json();
+
+        document.getElementById("productTitle").textContent = product.title;
+        document.getElementById("productPrice").textContent = `₹${product.price}`;
+        document.getElementById("productCondition").textContent = `Condition: ${product.condition}`;
+        document.getElementById("productLocation").textContent = `📍 Location: ${product.location}`;
+        document.getElementById("productDescription").textContent = product.description;
+        document.getElementById("productSeller").textContent = `👤 Seller: ${product.sellerName || "Anonymous"}`;
+        document.getElementById("productImage").src = product.imageUrl || "default.jpg";
+      } catch (err) {
+        console.error("Failed to load product", err);
+      }
+    }
+
+    window.onload = loadProduct;
+  </script>
+</body>
+</html>

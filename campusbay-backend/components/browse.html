@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CAMPUSBAY - Browse Listings</title>
+  <link rel="stylesheet" href="browse.css" />
+  <style>
+    .listing-card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      width: 250px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+    .listing-card:hover {
+      transform: scale(1.02);
+    }
+    .card-image {
+      height: 150px;
+      background-color: #f3f3f3;
+      background-size: cover;
+      background-position: center;
+    }
+    .card-details {
+      padding: 10px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-price {
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    .card-meta {
+      font-size: 13px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .listings-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .pagination button.active {
+      font-weight: bold;
+      background: #333;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <nav class="navbar">
+        <div class="logo"><a href="home.html">CAMPUSBAY</a></div>
+        <ul class="nav-links">
+          <li><a href="home.html">Home</a></li>
+          <li><a href="barter.html">Barter Center</a></li>
+          <li><a href="listing.html">My Listings</a></li>
+          <li><a href="message.html">Messages</a></li>
+        </ul>
+        <div class="auth-buttons">
+          <button onclick="location.href='login.html'">Log In</button>
+          <button onclick="location.href='signup.html'">Sign Up</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <h2 class="page-title">Browse Listings</h2>
+      <div class="search-sort-row">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search products..." />
+          <select id="categorySelect">
+            <option value="">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Books">Books</option>
+            <option value="Furniture">Furniture</option>
+            <option value="Lab Equipment">Lab Equipment</option>
+            <option value="Sports gear">Sports gear</option>
+            <option value="Home Appliance">Home Appliance</option>
+            <option value="Stationary">Stationary</option>
+            <option value="Music">Music</option>
+            <option value="Other">Other</option>
+          </select>
+          <button onclick="fetchListings()">Search</button>
+        </div>
+      </div>
+
+      <div class="content-row">
+        <aside class="filters">
+          <h3>Filters</h3>
+          <div class="filter-group">
+            <span class="filter-label">Condition</span>
+            <label><input type="checkbox" value="New" class="condition-filter" /> New</label>
+            <label><input type="checkbox" value="Like New" class="condition-filter" /> Like New</label>
+            <label><input type="checkbox" value="Good" class="condition-filter" /> Good</label>
+            <label><input type="checkbox" value="Fair" class="condition-filter" /> Fair</label>
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">Price Range</span>
+            <input type="number" id="minPrice" placeholder="Min (₹)" />
+            <input type="number" id="maxPrice" placeholder="Max (₹)" />
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">Location</span>
+            <select id="locationSelect">
+              <option value="">All Locations</option>
+              <option value="Campus">Campus</option>
+              <option value="Downtown">Downtown</option>
+              <option value="North Side">North Side</option>
+              <option value="South Side">South Side</option>
+            </select>
+          </div>
+          <button class="apply-filters" onclick="fetchListings()">Apply Filters</button>
+        </aside>
+
+        <section class="listings-section">
+          <div class="results-header">
+            <span id="resultCount">Showing results</span>
+            <select class="sort-select" id="sortSelect" onchange="fetchListings()">
+              <option value="newest">Sort by: Newest</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
+          <div class="listings-grid" id="listingsContainer"></div>
+          <div class="pagination" id="paginationContainer"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-main">
+        <div class="footer-col">
+          <div class="footer-logo">CAMPUSBAY</div>
+          <p>The student marketplace for buying, selling, and trading.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#">Browse</a></li>
+            <li><a href="#">Barter Center</a></li>
+            <li><a href="#">My Listings</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 CAMPUSBAY. All rights reserved.</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    const limit = 8;
+
+    async function fetchListings(page = 1) {
+      currentPage = page;
+
+      const query = document.getElementById("searchInput").value;
+      const category = document.getElementById("categorySelect").value;
+      const conditions = Array.from(document.querySelectorAll(".condition-filter:checked")).map(el => el.value);
+      const minPrice = document.getElementById("minPrice").value;
+      const maxPrice = document.getElementById("maxPrice").value;
+      const location = document.getElementById("locationSelect").value;
+      const sort = document.getElementById("sortSelect").value;
+
+      let url = `/api/listings/search?q=${encodeURIComponent(query)}&category=${encodeURIComponent(category)}&sort=${sort}&page=${page}&limit=${limit}`;
+      if (conditions.length) url += `&condition=${conditions.join(",")}`;
+      if (minPrice) url += `&minPrice=${minPrice}`;
+      if (maxPrice) url += `&maxPrice=${maxPrice}`;
+      if (location) url += `&location=${encodeURIComponent(location)}`;
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const container = document.getElementById("listingsContainer");
+        const pagination = document.getElementById("paginationContainer");
+        container.innerHTML = "";
+        pagination.innerHTML = "";
+
+        if (!data.results.length) {
+          container.innerHTML = "<p>No listings found.</p>";
+          document.getElementById("resultCount").innerText = `Showing 0 results`;
+          return;
+        }
+
+        document.getElementById("resultCount").innerText = `Showing ${data.results.length} of ${data.total} results`;
+
+        data.results.forEach(item => {
+          const imageUrl = item.imageUrl ? item.imageUrl : "images/placeholder.png";
+          container.innerHTML += `
+            <div class="listing-card">
+              <div class="card-image" style="background-image: url('${imageUrl}');"></div>
+              <div class="card-details">
+                <div class="card-title">${item.title}</div>
+                <div class="card-price">₹${item.price}</div>
+                <div class="card-meta">Condition: ${item.condition}<br>📍 ${item.location}</div>
+              </div>
+            </div>
+          `;
+        });
+
+        const totalPages = Math.ceil(data.total / limit);
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.innerText = i;
+          if (i === currentPage) btn.classList.add("active");
+          btn.onclick = () => fetchListings(i);
+          pagination.appendChild(btn);
+        }
+      } catch (err) {
+        console.error("❌ Error fetching listings:", err);
+      }
+    }
+
+    window.onload = fetchListings;
+  </script>
+</body>
+</html>

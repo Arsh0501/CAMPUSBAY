@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CAMPUSBAY - Barter Center</title>
+    <link rel="stylesheet" href="barter.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo"><a href="home.html">CAMPUSBAY</a></div>
+            <ul class="nav-links">
+                <li><a href="browse.html">Browse</a></li>
+                <li><a href="lisiting.html">My Listings</a></li>
+                <li><a href="barter.html" class="active">Barter Center</a></li>
+            </ul>
+            <div class="profile-icon">
+                <span>👤</span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="barter-center">
+            <h2>Barter Center</h2>
+            <p class="subtitle">Manage your barter offers and make new trades</p>
+            <div class="tabs">
+                <button class="tab active">Received Offers</button>
+                <button class="tab">Sent Offers</button>
+                <button class="tab">Make New Offer</button>
+            </div>
+            <div class="offers-list">
+                <!-- Offer 1: Pending -->
+                <div class="offer-card">
+                    <div class="offer-header">
+                        <div class="user-avatar">👩‍🎓</div>
+                        <div class="user-info">
+                            <span class="user-name">Sarah Chen</span>
+                            <span class="offer-time">2 hours ago</span>
+                        </div>
+                        <span class="offer-status pending">Pending</span>
+                    </div>
+                    <div class="offer-body">
+                        <div class="offer-section">
+                            <span class="offer-label">Offering</span>
+                            <div class="offer-item">
+                                <div class="item-icon book">Book</div>
+                                <div>
+                                    <div class="item-title">Calculus Textbook</div>
+                                    <div class="item-meta">Math • Like New</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offer-section">
+                            <span class="offer-label">Requesting</span>
+                            <div class="offer-item">
+                                <div class="item-icon laptop">Laptop</div>
+                                <div>
+                                    <div class="item-title">MacBook Pro 13"</div>
+                                    <div class="item-meta">Electronics • Good</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="offer-actions">
+                        <button class="accept">Accept Offer</button>
+                        <button class="reject">Reject Offer</button>
+                    </div>
+                </div>
+                <!-- Offer 2: Accepted -->
+                <div class="offer-card">
+                    <div class="offer-header">
+                        <div class="user-avatar">👨‍🎓</div>
+                        <div class="user-info">
+                            <span class="user-name">Alex Johnson</span>
+                            <span class="offer-time">1 day ago</span>
+                        </div>
+                        <span class="offer-status accepted">Accepted</span>
+                    </div>
+                    <div class="offer-body">
+                        <div class="offer-section">
+                            <span class="offer-label">Offering</span>
+                            <div class="offer-item">
+                                <div class="item-icon chair">Chair</div>
+                                <div>
+                                    <div class="item-title">Desk Chair</div>
+                                    <div class="item-meta">Furniture • Good</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offer-section">
+                            <span class="offer-label">Requesting</span>
+                            <div class="offer-item">
+                                <div class="item-icon lamp">Lamp</div>
+                                <div>
+                                    <div class="item-title">Study Lamp</div>
+                                    <div class="item-meta">Electronics • Excellent</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="offer-message">
+                        Trade accepted! Contact Alex to arrange the exchange.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            <span>&copy; 2025 CAMPUSBAY. Making student trading simple.</span>
+        </div>
+    </footer>
+</body>
+</html>
